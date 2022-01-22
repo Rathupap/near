@@ -1,4 +1,6 @@
 import type { NextPage } from "next";
+import { connect, ConnectedProps } from "react-redux";
+import { Dispatch } from "redux";
 import tw from "twin.macro";
 import { useState } from "react";
 import validator from "validator";
@@ -8,7 +10,9 @@ import Header from "../components/shared/Header";
 import HorizontalLine from "../components/shared/HorizontalLine";
 import Input from "../components/shared/Input";
 import { Logo } from "../svg";
-import { SignUpWithEnum } from "../types/enum";
+import { ActionTypeEnum, SignUpWithEnum } from "../types/enum";
+import { FlowState, UserType } from "../types/state";
+import { useRouter } from "next/router";
 
 const SignWithButtONWrapper = tw.button`
   py-2
@@ -16,12 +20,26 @@ const SignWithButtONWrapper = tw.button`
   rounded-2xl
 `;
 
-const Home: NextPage = () => {
+interface DispatchProps {
+  signUpWithEmail: (email: string) => void;
+  signUpWithPhone: (phone: string) => void;
+}
+
+interface StateProps {
+  user?: UserType;
+}
+
+type HomeProps = StateProps & DispatchProps;
+
+const Home: NextPage<HomeProps> = ({  user, signUpWithEmail, signUpWithPhone }) => {
+  const router = useRouter();
   const [signUpWith, setSignUpWith] = useState<SignUpWithEnum>(SignUpWithEnum.email);
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
 
-  const enableButton = validator.isEmail(email) && signUpWith === SignUpWithEnum.email || phone && signUpWith === SignUpWithEnum.phone || false;
+  const enableButton = validator.isEmail(email) && signUpWith === SignUpWithEnum.email || validator.isMobilePhone(phone, [
+    "en-ZA"
+  ]) && signUpWith === SignUpWithEnum.phone || false;
 
   const renderSignUpWithBlock = () => (
     <div className="space-x-3">
@@ -33,6 +51,20 @@ const Home: NextPage = () => {
       </SignWithButtONWrapper>
     </div>
   )
+
+  const navigateToVerification = () => {
+    router.push("/verification");
+  }
+
+  const handleContinue = () => {
+    if(signUpWith === SignUpWithEnum.email){
+      signUpWithEmail(email);
+      navigateToVerification()
+    } else {
+      signUpWithPhone(phone);
+      navigateToVerification();
+    }
+  }
 
   return (
     <div>
@@ -55,7 +87,7 @@ const Home: NextPage = () => {
               <Input value={phone} type="email" placeholder="Ex (337) 378 8383" onChange={({ target: { value } }) => setPhone(value)} />
             </>
           }
-          <Button title="Continue" isDisabled={!enableButton} isPrimary={enableButton} />
+          <Button title="Continue" isDisabled={!enableButton} isPrimary={enableButton} onClick={handleContinue} />
           <p className="text-xs text-center mx-10 text-dark-grey">
             by clicking continue you must agree to near labs <a href="#" className="text-light-blue">Terms & Conditions</a> and <a href="#" className="text-light-blue">Privacy Policy</a>
           </p>
@@ -66,5 +98,30 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+const mapStateToProps = (state: FlowState) => {
+  return { user: state?.user}
+}
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    signUpWithEmail: (email: string) => {
+      dispatch({
+        type: ActionTypeEnum.EMAIL,
+        payload: {
+          email
+        }
+      });
+    },
+    signUpWithPhone: (phone: string) => {
+      dispatch({
+        type: ActionTypeEnum.PHONE,
+        payload: {
+          phone
+        }
+      });
+    },
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Home);
 

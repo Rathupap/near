@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, MouseEventHandler } from "react";
 import tw from "twin.macro";
 import { ChevronRight } from "../../svg";
 
@@ -6,6 +6,7 @@ interface ButtonProps {
     title: string;
     isDisabled?: boolean;
     isPrimary?: boolean;
+    onClick: MouseEventHandler<HTMLButtonElement>;
 }
 
 const ButtonWrapper = tw.button`
@@ -20,8 +21,12 @@ const ButtonWrapper = tw.button`
     text-base
 `;
 
-const Button: FC<ButtonProps> = ({ title, isDisabled = false, isPrimary = false }) => (
-    <ButtonWrapper disabled={isDisabled} className={`bg-dark-shade-black ${ isDisabled && "bg-disabled-button cursor-not-allowed"} ${ isPrimary && "bg-primary"}`}>
+const Button: FC<ButtonProps> = ({ title, isDisabled = false, isPrimary = false, onClick }) => (
+    <ButtonWrapper
+        disabled={isDisabled}
+        className={`bg-dark-shade-black ${ isDisabled && "bg-disabled-button cursor-not-allowed"} ${ isPrimary && "bg-primary"}`}
+        onClick={onClick}
+    >
         <span className="pr-4">
         {
             title

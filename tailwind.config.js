@@ -12,6 +12,8 @@ module.exports = {
         "grey-border": "#BEBEC2",
         "disabled-button": "#BEBEC2",
         "light-blue": "#587BE0",
+        "lighter-grey": "#808080",
+        "code-border": "#CFCFCF",
       },
     },
   },
