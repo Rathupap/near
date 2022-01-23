@@ -6,13 +6,13 @@ const InputComponent = tw.input`
     text-base
     text-dark-shade-black
     w-full
+    py-3
     focus-visible:outline-none
 `;
 
 const InputWrapper = tw.div`
     flex
-    py-4
-    px-6
+    px-4
     w-full
     rounded-xl
 `;
@@ -21,10 +21,12 @@ interface InputProps {
     type: HTMLInputTypeAttribute;
     value: string;
     placeholder?: string;
-    onChange: ChangeEventHandler<HTMLInputElement>
+    onChange: ChangeEventHandler<HTMLInputElement>;
+    inputRightLabel?: string;
+    error?: boolean;
 }
 
-const Input: FC<InputProps> = ({ type, value, placeholder, onChange }) => {
+const Input: FC<InputProps> = ({ type, value, placeholder, onChange, inputRightLabel, error }) => {
 
     const [isFocus, setIsFocus] = useState<boolean>(false);
 
@@ -37,7 +39,7 @@ const Input: FC<InputProps> = ({ type, value, placeholder, onChange }) => {
     }
 
     return (
-    <InputWrapper className={`${isFocus ? "border-2 border-primary": "border border-grey-border"}`}>
+    <InputWrapper className={`${isFocus ? "border-2 border-primary": "border border-grey-border"} ${ error && "border-2 border-error"}`}>
         <InputComponent
             type={type}
             value={value}
@@ -46,6 +48,13 @@ const Input: FC<InputProps> = ({ type, value, placeholder, onChange }) => {
             onBlur={handleBlur}
             onChange={onChange} 
         />
+        {
+            inputRightLabel && (
+                <div className="border-l border-grey-border flex justify-center items-center pl-4">
+                    <p className="font-semibold">{inputRightLabel}</p>
+                </div>
+            )
+        }
     </InputWrapper>
 )
 }

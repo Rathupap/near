@@ -28,7 +28,9 @@ const Code: FC<CodeProps> = ({ value, onChange }) => {
     }
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-        onChange(event.target.value);
+        if(/^\d*\.?\d*$/.test(event.target.value)){
+            onChange(event.target.value);
+        }
     }
 
     return (

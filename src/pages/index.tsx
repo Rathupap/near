@@ -1,18 +1,19 @@
 import type { NextPage } from "next";
-import { connect, ConnectedProps } from "react-redux";
+import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import tw from "twin.macro";
 import { useState } from "react";
 import validator from "validator";
 import Login from "../components/login";
 import Button from "../components/shared/Button";
-import Header from "../components/shared/Header";
+import Header from "../components/shared/header";
 import HorizontalLine from "../components/shared/HorizontalLine";
 import Input from "../components/shared/Input";
 import { Logo } from "../svg";
 import { ActionTypeEnum, SignUpWithEnum } from "../types/enum";
 import { FlowState, UserType } from "../types/state";
 import { useRouter } from "next/router";
+import Terms from "../components/terms";
 
 const SignWithButtONWrapper = tw.button`
   py-2
@@ -31,7 +32,7 @@ interface StateProps {
 
 type HomeProps = StateProps & DispatchProps;
 
-const Home: NextPage<HomeProps> = ({  user, signUpWithEmail, signUpWithPhone }) => {
+const Home: NextPage<HomeProps> = ({ signUpWithEmail, signUpWithPhone }) => {
   const router = useRouter();
   const [signUpWith, setSignUpWith] = useState<SignUpWithEnum>(SignUpWithEnum.email);
   const [email, setEmail] = useState<string>("");
@@ -80,17 +81,17 @@ const Home: NextPage<HomeProps> = ({  user, signUpWithEmail, signUpWithPhone }) 
           {
             signUpWith === SignUpWithEnum.email ?
             <>
-              <Input value={email} type="text" placeholder="princerathupa@gmail.com" onChange={({ target: { value } }) => setEmail(value)} />
+              <Input value={email} type="text" placeholder="Ex. princerathupa@gmail.com" onChange={({ target: { value } }) => setEmail(value)} />
             </>
             :
             <>
-              <Input value={phone} type="email" placeholder="Ex (337) 378 8383" onChange={({ target: { value } }) => setPhone(value)} />
+              <Input value={phone} type="email" placeholder="Ex. (337) 378 8383" onChange={({ target: { value } }) => setPhone(value)} />
             </>
           }
           <Button title="Continue" isDisabled={!enableButton} isPrimary={enableButton} onClick={handleContinue} />
-          <p className="text-xs text-center mx-10 text-dark-grey">
-            by clicking continue you must agree to near labs <a href="#" className="text-light-blue">Terms & Conditions</a> and <a href="#" className="text-light-blue">Privacy Policy</a>
-          </p>
+          <Terms>
+           <span> by clicking continue you must agree to near labs <a href="#" className="text-light-blue">Terms & Conditions</a> and <a href="#" className="text-light-blue">Privacy Policy</a></span>
+          </Terms>
           <HorizontalLine />
           <Login />
         </div>

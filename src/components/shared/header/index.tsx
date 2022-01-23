@@ -5,7 +5,6 @@ const HeaderWrapper = tw.div`
 
     bg-light-grey
     p-5
-    
 `;
 
 interface HeaderProps {

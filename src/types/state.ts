@@ -20,4 +20,5 @@ export interface ActionType extends AnyAction {
 
 export interface FlowState {
   user?: UserType;
+  users: UserType[];
 }

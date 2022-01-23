@@ -3,6 +3,20 @@ import { ActionType, FlowState } from "../types/state";
 
 const initialState = {
   user: {},
+  users: [
+    {
+      email: "walter@gmail.com",
+      phone: "",
+      fullName: "Walter James",
+      accountId: "walterj",
+    },
+    {
+      email: "",
+      phone: "0745057082",
+      fullName: "John Doe",
+      accountId: "johnd",
+    },
+  ],
 };
 
 export const flowReducer = (
@@ -28,7 +42,7 @@ export const flowReducer = (
           email: "",
         },
       };
-    case ActionTypeEnum.USER_DETAILS:
+    case ActionTypeEnum.CREATE_ACCOUNT:
       return {
         ...state,
         user: {

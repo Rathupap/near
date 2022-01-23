@@ -1,5 +1,5 @@
 export enum ActionTypeEnum {
   "EMAIL",
   "PHONE",
-  "USER_DETAILS",
+  "CREATE_ACCOUNT",
 }
